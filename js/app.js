@@ -41,5 +41,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
           //Crear los indices y campos de la DB, createIndex: 3 parametros, nombre, keypath y opciones.
           objectStore.createIndex('mascota','mascota',{ unique : false });//Indice para mascota
+          objectStore.createIndex('cliente','cliente',{ unique : false });//Indice para el cliente
+          objectStore.createIndex('telefono','telefono',{ unique : false });//Indice para el telefono
+          objectStore.createIndex('fecha','fecha',{ unique : false });//Indice para la fecha
+          objectStore.createIndex('hora','hora',{ unique : false });//Indice para la hora
+          objectStore.createIndex('sintomas','sintomas',{ unique : false });//Indice para sintomas
+          
+          
      }
+     //Cuando el form se envia
+     formulario.addEventListener('submit', agregarDatos);
+
+     function agregarDatos(e){
+          e.preventDefault();
+
+          const nuevaCita = {
+               mascota: mascota.value,
+               cliente: nombreCliente.value,
+               telefono: telefono.value,
+               fecha: fecha.value,
+               hora: hora.value,
+               sintomas: sintomas.value
+          }
+          console.log(nuevaCita)
+     }
+     
 });
