@@ -1,15 +1,15 @@
 let DB;
 
 //Selectores de la interfaz
-const formulario = document.querySelector('form'),
-     mascota = document.querySelector('#mascota'),
+const form = document.querySelector('form'),
+     nombreMascota = document.querySelector('#mascota'),
      nombreCliente = document.querySelector('#cliente'),
      telefono = document.querySelector('#telefono'),
      fecha = document.querySelector('#fecha'),
      hora = document.querySelector('#hora'),
      sintomas = document.querySelector('#sintomas'),
      citas = document.querySelector('#citas'),
-     heacdingAdministra = document.querySelector('#administra');
+     headingAdministra = document.querySelector('#administra');
 
 
 //Esperar por el DOM Ready
@@ -50,20 +50,40 @@ document.addEventListener('DOMContentLoaded', () => {
           
      }
      //Cuando el form se envia
-     formulario.addEventListener('submit', agregarDatos);
+     form.addEventListener('submit', agregarDatos);
 
      function agregarDatos(e){
           e.preventDefault();
 
           const nuevaCita = {
-               mascota: mascota.value,
+               mascota: nombreMascota.value,
                cliente: nombreCliente.value,
                telefono: telefono.value,
                fecha: fecha.value,
                hora: hora.value,
                sintomas: sintomas.value
           }
-          console.log(nuevaCita)
+          //console.log(nuevaCita)
+
+          //En IndexedDB se utilizan las transacciones
+
+          let transaction = DB.transaction(['citas'], 'readwrite');
+          let objectStore = transaction.objectStore('citas');
+          console.log(objectStore)
+          //Enviamos una peticion
+          let peticion = objectStore.add(nuevaCita);
+ 
+          console.log(peticion);
+     
+          peticion.onsuccess = () =>{
+               form.reset();
+          }
+          transaction.oncomplete = () =>{
+               console.log('Cita agregada');
+          }
+          transaction.onerror = () => {
+               console.log('Hubo un error!');
+          }
      }
      
-});
+})
