@@ -15,7 +15,7 @@ const formulario = document.querySelector('form'),
 //Esperar por el DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
      //crear la base de datos
-     let crearDB = window.indexedDB.open('citas', 1);//nombre y version, siempre usar numero enteros
+     let crearDB = window.indexedDB.open('citas', 1);//nombre y version, Para la version siempre usar numero entero
 
      //Si hay 1 error enviarlo a la consola
      crearDB.onerror = function(){
@@ -23,10 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
      }
      //Si todo esta bien entonces mostrar en consola y asignar la base de datos
      crearDB.onsuccess = function(){
-          console.log('todo listo');
+          //console.log('todo listo');
 
           //Asignar a la base de datos
-          DB = crearDB.result;
-          console.log(DB)
+          DB = crearDB.result;//Muestra la DB en la pestaña aplicacion en la opcion IndexedDB
+         
+     }
+
+     //Este metodo solo corre una vez y es ideal para crear el Schema de la DB
+     crearDB.onupgradeneeded = function(e){
+          //El evento es la misma DB
+          let db = e.target.result;
+
+          //Definir el object store, toma 2 parametros: nombre de DB y las opciones.
+          //Keypath es el indice de la base de datos
+          let objectStore = db.createObjectStore('citas', {keyPath:'key', autoincrement: true});
+
+          //Crear los indices y campos de la DB, createIndex: 3 parametros, nombre, keypath y opciones.
+          objectStore.createIndex('mascota','mascota',{ unique : false });//Indice para mascota
      }
 });
