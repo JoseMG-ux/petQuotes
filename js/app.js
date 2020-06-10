@@ -15,11 +15,11 @@ const form = document.querySelector('form'),
 //Esperar por el DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
      //crear la base de datos
-     let crearDB = window.indexedDB.open('citas', 1);//nombre y version, Para la version siempre usar numero entero
+     let crearDB = window.indexedDB.open('citas', 1);//nombre y version, Para la version siempre debee usar numero entero
 
      //Si hay 1 error enviarlo a la consola
      crearDB.onerror = function(){
-          console.log('hubo un error')
+          console.log('hubo un error');
      }
      //Si todo esta bien entonces mostrar en consola y asignar la base de datos
      crearDB.onsuccess = function(){
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
           //Asignar a la base de datos
           DB = crearDB.result;//Muestra la DB en la pestaña aplicacion en la opcion IndexedDB
-         
-     }
+          mostrarCitas();
+     };
 
      //Este metodo solo corre una vez y es ideal para crear el Schema de la DB
      crearDB.onupgradeneeded = function(e){
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           //Definir el object store, toma 2 parametros: nombre de DB y las opciones.
           //Keypath es el indice de la base de datos
-          let objectStore = db.createObjectStore('citas', {keyPath:'key', autoincrement: true});
+          let objectStore = db.createObjectStore('citas', {keyPath:'key', autoIncrement: true});
 
           //Crear los indices y campos de la DB, createIndex: 3 parametros, nombre, keypath y opciones.
           objectStore.createIndex('mascota','mascota',{ unique : false });//Indice para mascota
@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
           e.preventDefault();
 
           const nuevaCita = {
-               mascota: nombreMascota.value,
-               cliente: nombreCliente.value,
-               telefono: telefono.value,
-               fecha: fecha.value,
-               hora: hora.value,
-               sintomas: sintomas.value
-          }
+               mascota : nombreMascota.value,
+               cliente : nombreCliente.value,
+               telefono : telefono.value,
+               fecha : fecha.value,
+               hora : hora.value,
+               sintomas : sintomas.value
+          };
           //console.log(nuevaCita)
 
           //En IndexedDB se utilizan las transacciones
@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log(objectStore)
           //Enviamos una peticion
           let peticion = objectStore.add(nuevaCita);
- 
           console.log(peticion);
      
           peticion.onsuccess = () =>{
@@ -80,10 +79,47 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           transaction.oncomplete = () =>{
                console.log('Cita agregada');
+               mostrarCitas();
           }
           transaction.onerror = () => {
                console.log('Hubo un error!');
           }
      }
+
+     function mostrarCitas(){
+          //Eliminar citas anteriores 
+          while(citas.firstChild){
+               citas.removeChild(citas.firstChild)
+          }
+
+          //Creamos un objectSTORE
+          let objectStore = DB.transaction('citas').objectStore('citas');
+
+          //Esto retorna una peticion
+          objectStore.openCursor().onsuccess = function(e){
+               //Cursos se va a ubicar en el registro indicado para acceder a los datos
+               let cursor = e.target.result;
+
+               //console.log(cursor);
+               if(cursor){
+                    let citaHTML = document.createElement('li');
+                    citaHTML.setAttribute('data-cita-id', cursor.value.key);
+                    citaHTML.classList.add('list-group-item');
+
+                    citaHTML.innerHTML =`
+                    <p class="font-weight-bold">Mascota: <span class="font-weight-normal">${cursor.value.mascota}</span></p>
+                    <p class="font-weight-bold">Cliente: <span class="font-weight-normal">${cursor.value.cliente}</span></p>
+                    <p class="font-weight-bold">Telefono: <span class="font-weight-normal">${cursor.value.telefono}</span></p>
+                    <p class="font-weight-bold">Fecha: <span class="font-weight-normal">${cursor.value.Fecha}</span></p>
+                    <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.Hora}</span></p>
+                    <p class="font-weight-bold">Sintomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
+                    `;
+
+                    //Append en el padre
+                    citas.appendChild(citaHTML);
+                    cursor.continue();
+               }
+          }
+     }
      
-})
+});
