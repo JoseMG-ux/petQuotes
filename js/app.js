@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
      }
      function borrarCitas(e){
-          let citaID = e.target.parentElement.getAttribute('data-cita-id');
+          let citaID = Number(e.target.parentElement.getAttribute('data-cita-id'));
 
           //En IndexedDB se utilizan las transacciones
           let transaction = DB.transaction(['citas'], 'readwrite');
