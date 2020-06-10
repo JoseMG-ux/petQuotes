@@ -114,6 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.Hora}</span></p>
                     <p class="font-weight-bold">Sintomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
                     `;
+                    //Boton borrar
+                    const botonBorrar = document.createElement('button');
+                    botonBorrar.classList.add('borrar', 'btn', 'btn-danger');
+                    botonBorrar.innerHTML = '<span aria-hidden="true">x</span> Borrar';
+                    botonBorrar.onclick = borrarCitas;
+                    citaHTML.appendChild(botonBorrar);
 
                     //Append en el padre
                     citas.appendChild(citaHTML);
@@ -130,11 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }else{
                          headingAdministra.textContent = 'Adminsitra tus citas'
                     }
-                    
-                    
-
                }
           }
+     }
+     function borrarCitas(e){
+          let citaID = e.target.parentElement.getAttribute('data-cita-id');
      }
      
 });
