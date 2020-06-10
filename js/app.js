@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="font-weight-bold">Mascota: <span class="font-weight-normal">${cursor.value.mascota}</span></p>
                     <p class="font-weight-bold">Cliente: <span class="font-weight-normal">${cursor.value.cliente}</span></p>
                     <p class="font-weight-bold">Telefono: <span class="font-weight-normal">${cursor.value.telefono}</span></p>
-                    <p class="font-weight-bold">Fecha: <span class="font-weight-normal">${cursor.value.Fecha}</span></p>
-                    <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.Hora}</span></p>
+                    <p class="font-weight-bold">Fecha: <span class="font-weight-normal">${cursor.value.fecha}</span></p>
+                    <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p>
                     <p class="font-weight-bold">Sintomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
                     `;
                     //Boton borrar
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           transaction.oncomplete = () => {
                e.target.parentElement.parentElement.removeChild( e.target.parentElement );
-               console.log('Se elimino la cita con el ID: ${citaID}');
+               //console.log('Se elimino la cita con el ID: ${citaID}');
 
                if(!citas.firstChild){
                     //Cuando no hay registros
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     listado.textContent = 'No hay registros';
                     citas.appendChild(listado);
                }else{
-                    headingAdministra.textContent = 'Adminsitra tus citas'
+                    headingAdministra.textContent = 'Administra tus citas'
                }
           }
 
