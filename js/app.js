@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           let transaction = DB.transaction(['citas'], 'readwrite');
           let objectStore = transaction.objectStore('citas');
-          console.log(objectStore)
+          //console.log(objectStore)
           //Enviamos una peticion
           let peticion = objectStore.add(nuevaCita);
-          console.log(peticion);
+          //console.log(peticion);
      
           peticion.onsuccess = () =>{
                form.reset();
@@ -141,6 +141,31 @@ document.addEventListener('DOMContentLoaded', () => {
      }
      function borrarCitas(e){
           let citaID = e.target.parentElement.getAttribute('data-cita-id');
+
+          //En IndexedDB se utilizan las transacciones
+          let transaction = DB.transaction(['citas'], 'readwrite');
+          let objectStore = transaction.objectStore('citas');
+          console.log(objectStore)
+          //Enviamos una peticion
+          let peticion = objectStore.delete(citaID);
+
+          transaction.oncomplete = () => {
+               e.target.parentElement.parentElement.removeChild( e.target.parentElement );
+               console.log('Se elimino la cita con el ID: ${citaID}');
+
+               if(!citas.firstChild){
+                    //Cuando no hay registros
+                    headingAdministra.textContent = 'Agrega citas para comenzar';
+                    let listado = document.createElement('p');
+                    listado.classList.add('text-center');
+                    listado.textContent = 'No hay registros';
+                    citas.appendChild(listado);
+               }else{
+                    headingAdministra.textContent = 'Adminsitra tus citas'
+               }
+          }
+
+
      }
      
 });
