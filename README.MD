@@ -11,4 +11,4 @@
 
 # 👨‍💻 ![Twitter Follow](https://img.shields.io/twitter/follow/Gzjosemgz?style=social)
 
-![Jose Moreno Gomez](https://repository-images.githubusercontent.com/270916037/5cfb3100-ab2f-11ea-98fd-f696aacbeb08)
+![Jose Moreno Gomez](https://repository-images.githubusercontent.com/270916037/ed9a4580-abf1-11ea-98b7-56001b42907e)
