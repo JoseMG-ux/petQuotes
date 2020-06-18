@@ -1,6 +1,6 @@
 let DB;
 
-//Selectores de la interfaz
+//Interface selectors
 const form = document.querySelector('form'),
      nombreMascota = document.querySelector('#mascota'),
      nombreCliente = document.querySelector('#cliente'),
@@ -12,44 +12,44 @@ const form = document.querySelector('form'),
      headingAdministra = document.querySelector('#administra');
 
 
-//Esperar por el DOM Ready
+//Wait for him DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
-     //crear la base de datos
-     let crearDB = window.indexedDB.open('citas', 1);//nombre y version, Para la version siempre debee usar numero entero
+     //Create DB
+     let crearDB = window.indexedDB.open('citas', 1);//name and version, for la version you should always use an integer
 
-     //Si hay 1 error enviarlo a la consola
+     //If there is 1 error send it to the console
      crearDB.onerror = function(){
           console.log('hubo un error');
      }
-     //Si todo esta bien entonces mostrar en consola y asignar la base de datos
+     //If everything is ok, it shows in the console and assigns the database
      crearDB.onsuccess = function(){
-          //console.log('todo listo');
+          //console.log('READY');
 
-          //Asignar a la base de datos
-          DB = crearDB.result;//Muestra la DB en la pestaña aplicacion en la opcion IndexedDB
+          //assign db
+          DB = crearDB.result;//Show the DB in the application tab in the IndexedDB option
           mostrarCitas();
      };
 
-     //Este metodo solo corre una vez y es ideal para crear el Schema de la DB
+     //This method only runs once and is ideal for creating the DB Schema
      crearDB.onupgradeneeded = function(e){
-          //El evento es la misma DB
+          //the event is the DB
           let db = e.target.result;
 
-          //Definir el object store, toma 2 parametros: nombre de DB y las opciones.
-          //Keypath es el indice de la base de datos
+          //Define the object store, it takes 2 parameters: DB name and options.
+          //Keypath is the index of the database
           let objectStore = db.createObjectStore('citas', {keyPath:'key', autoIncrement: true});
 
-          //Crear los indices y campos de la DB, createIndex: 3 parametros, nombre, keypath y opciones.
-          objectStore.createIndex('mascota','mascota',{ unique : false });//Indice para mascota
-          objectStore.createIndex('cliente','cliente',{ unique : false });//Indice para el cliente
-          objectStore.createIndex('telefono','telefono',{ unique : false });//Indice para el telefono
-          objectStore.createIndex('fecha','fecha',{ unique : false });//Indice para la fecha
-          objectStore.createIndex('hora','hora',{ unique : false });//Indice para la hora
-          objectStore.createIndex('sintomas','sintomas',{ unique : false });//Indice para sintomas
+          //crearte indexs and fiels of the DB, createIndex: 3 parameters, name, keypath y opcions.
+          objectStore.createIndex('mascota','mascota',{ unique : false });//Index for pet
+          objectStore.createIndex('cliente','cliente',{ unique : false });//Index for client
+          objectStore.createIndex('telefono','telefono',{ unique : false });//Index for phone
+          objectStore.createIndex('fecha','fecha',{ unique : false });//Indice Index for date
+          objectStore.createIndex('hora','hora',{ unique : false });//Indice Index for hour
+          objectStore.createIndex('sintomas','sintomas',{ unique : false });//Index for symptims
           
           
      }
-     //Cuando el form se envia
+     //when the form is sent
      form.addEventListener('submit', agregarDatos);
 
      function agregarDatos(e){
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           //console.log(nuevaCita)
 
-          //En IndexedDB se utilizan las transacciones
+          //In IndexedDB transactions are used
 
           let transaction = DB.transaction(['citas'], 'readwrite');
           let objectStore = transaction.objectStore('citas');
@@ -87,17 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
      }
 
      function mostrarCitas(){
-          //Eliminar citas anteriores 
+          //Delete previous appointments
           while(citas.firstChild){
                citas.removeChild(citas.firstChild)
           }
 
-          //Creamos un objectSTORE
+          //Create a objectSTORE
           let objectStore = DB.transaction('citas').objectStore('citas');
 
-          //Esto retorna una peticion
+          //Return 1 petition
           objectStore.openCursor().onsuccess = function(e){
-               //Cursos se va a ubicar en el registro indicado para acceder a los datos
+               //Courses will be located in the register indicated to access the data
                let cursor = e.target.result;
 
                //console.log(cursor);
@@ -114,20 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p>
                     <p class="font-weight-bold">Sintomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
                     `;
-                    //Boton borrar
+                    //Buttom delete
                     const botonBorrar = document.createElement('button');
                     botonBorrar.classList.add('borrar', 'btn', 'btn-danger');
                     botonBorrar.innerHTML = '<span aria-hidden="true">x</span> Borrar';
                     botonBorrar.onclick = borrarCitas;
                     citaHTML.appendChild(botonBorrar);
 
-                    //Append en el padre
+                    //Append in the father
                     citas.appendChild(citaHTML);
-                    //consultar los proximos registros     
+                    //consult the next records    
                     cursor.continue();
                }else{
                     if(!citas.firstChild){
-                         //Cuando no hay registros
+                         //When there are no records
                          headingAdministra.textContent = 'Agrega citas para comenzar';
                          let listado = document.createElement('p');
                          listado.classList.add('text-center');
@@ -142,11 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
      function borrarCitas(e){
           let citaID = Number(e.target.parentElement.getAttribute('data-cita-id'));
 
-          //En IndexedDB se utilizan las transacciones
+          //In IndexedDB transactions are used
           let transaction = DB.transaction(['citas'], 'readwrite');
           let objectStore = transaction.objectStore('citas');
           console.log(objectStore)
-          //Enviamos una peticion
+          //Sent petitio
           let peticion = objectStore.delete(citaID);
 
           transaction.oncomplete = () => {
@@ -154,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
                //console.log('Se elimino la cita con el ID: ${citaID}');
 
                if(!citas.firstChild){
-                    //Cuando no hay registros
-                    headingAdministra.textContent = 'Agrega citas para comenzar';
+                    //When there are no records
+                    headingAdministra.textContent = 'Agrega citas paracomenzar';
                     let listado = document.createElement('p');
                     listado.classList.add('text-center');
                     listado.textContent = 'No hay registros';
